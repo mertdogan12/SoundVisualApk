@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">SoundVisualApk</string>
-    <string name="connect">Connecet</string>
+    <string name="connect">Connect</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_song">No Song is playing</string>
+    <string name="music_navigator">Music Navigator</string>
+    <string name="picture_navigator">Picture Navigator</string>
+    <string name="menu_music">Menu Music</string>
+    <string name="song">Song</string>
 </resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/songPlayer">
+    <fragment
+        android:id="@+id/songPlayer"
+        android:name="de.mert.soundvisualapk.SongPlayer"
+        android:label="fragment_song_player"
+        tools:layout="@layout/fragment_song_player" >
+        <action
+            android:id="@+id/action_songPlayer_to_pictureFragment"
+            app:destination="@id/pictureFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pictureFragment"
+        android:name="de.mert.soundvisualapk.PictureFragment"
+        android:label="fragment_picture"
+        tools:layout="@layout/fragment_picture" >
+        <action
+            android:id="@+id/action_pictureFragment_to_songPlayer"
+            app:destination="@id/songPlayer" />
+    </fragment>
+</navigation>

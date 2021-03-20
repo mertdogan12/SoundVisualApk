@@ -1,48 +1,44 @@
 package de.mert.soundvisualapk
 
-import android.content.Context
-import android.content.res.ColorStateList
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.View
-import android.view.inputmethod.InputMethodManager
-import androidx.annotation.RequiresApi
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupActionBarWithNavController
 import de.mert.soundvisualapk.databinding.ActivityMainBinding
-import java.text.NumberFormat
-import kotlin.math.ceil
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private var keyboardOpen: Boolean = false;
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.backGround.setOnClickListener  {
-            closeKeyboard(it)
-        }
+        // Get the navigation host fragment from this Activity
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
-        binding.ipAddressInput.setOnKeyListener { v, keyCode, event ->  handleKeyEvent(v, keyCode)}
+        // Instantiate the navController using the NavHostFragment
+        navController = navHostFragment.navController
+
+        // Make sure actions in the ActionBar get propagated to the NavController
+        setupActionBarWithNavController(navController)
+
+        binding.menuSong.setOnClickListener { perfAction(it)  }
     }
 
-    private fun handleKeyEvent(view: View, keyCode: Int): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_ENTER) {
-
-            closeKeyboard(view)
-            return true
-        }
-
-        return false
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    private fun closeKeyboard(view: View) {
-        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    private fun perfAction(view: View) {
+        val action = SongPlayerDirections.actionSongPlayerToPictureFragment()
+        view.findNavController().navigate(action)
     }
 
 }
