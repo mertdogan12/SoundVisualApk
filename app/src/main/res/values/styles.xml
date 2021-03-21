@@ -1,10 +1,14 @@
 <resources>
-    <!-- Base application theme. -->
+    <!-- Text -->
     <style name="Widget.SoundVisualApk.Text" parent="Widget.MaterialComponents.TextView">
-        <!-- Customize your theme here. -->
         <item name="android:minHeight">48dp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+    </style>
+    
+    <!-- Status Bar -->
+    <style name="Widget.SoundVisualApk.ToolBar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">?attr/colorPrimary</item>
     </style>
 
 </resources>

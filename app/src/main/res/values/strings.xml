@@ -8,4 +8,5 @@
     <string name="picture_navigator">Picture Navigator</string>
     <string name="menu_music">Menu Music</string>
     <string name="song">Song</string>
+    <string name="picture">Picture</string>
 </resources>

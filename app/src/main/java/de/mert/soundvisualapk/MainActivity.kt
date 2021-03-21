@@ -2,11 +2,9 @@ package de.mert.soundvisualapk
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import de.mert.soundvisualapk.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -27,18 +25,6 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         // Make sure actions in the ActionBar get propagated to the NavController
-        setupActionBarWithNavController(navController)
-
-        binding.menuSong.setOnClickListener { perfAction(it)  }
+        binding.bottomNavigation.setupWithNavController(navController)
     }
-
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
-    private fun perfAction(view: View) {
-        val action = SongPlayerDirections.actionSongPlayerToPictureFragment()
-        view.findNavController().navigate(action)
-    }
-
 }

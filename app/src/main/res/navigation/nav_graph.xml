@@ -8,18 +8,10 @@
         android:id="@+id/songPlayer"
         android:name="de.mert.soundvisualapk.SongPlayer"
         android:label="fragment_song_player"
-        tools:layout="@layout/fragment_song_player" >
-        <action
-            android:id="@+id/action_songPlayer_to_pictureFragment"
-            app:destination="@id/pictureFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_song_player" />
     <fragment
         android:id="@+id/pictureFragment"
         android:name="de.mert.soundvisualapk.PictureFragment"
         android:label="fragment_picture"
-        tools:layout="@layout/fragment_picture" >
-        <action
-            android:id="@+id/action_pictureFragment_to_songPlayer"
-            app:destination="@id/songPlayer" />
-    </fragment>
+        tools:layout="@layout/fragment_picture" />
 </navigation>

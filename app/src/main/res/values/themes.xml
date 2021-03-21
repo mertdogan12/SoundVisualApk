@@ -19,5 +19,7 @@
         <item name="textInputStyle">@style/Widget.SoundVisualApk.Text</item>
         <!-- Text View -->
         <item name="android:textViewStyle">@style/Widget.SoundVisualApk.Text</item>
+        <!-- ToolBar -->
+        <item name="toolbarStyle">@style/Widget.SoundVisualApk.ToolBar</item>
     </style>
 </resources>
