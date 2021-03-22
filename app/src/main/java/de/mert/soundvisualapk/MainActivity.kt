@@ -2,6 +2,7 @@ package de.mert.soundvisualapk
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -11,6 +12,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+
+    companion object {
+        lateinit var value: String
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,5 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         // Make sure actions in the ActionBar get propagated to the NavController
         binding.bottomNavigation.setupWithNavController(navController)
+
+        value = intent.getStringExtra("value").toString()
     }
 }

@@ -8,10 +8,18 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import de.mert.soundvisualapk.databinding.ActivityConnectBinding
+import de.mert.soundvisualapk.network.SongApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.lang.Exception
 
 class ConnectActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityConnectBinding
+
+    companion object {
+        var BASE_URL = "http://localhost:3000"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +49,25 @@ class ConnectActivity : AppCompatActivity() {
 
     private fun connect(view: View) {
         val context = view.context
-        val intent = Intent(context, MainActivity::class.java)
+        var songs: String? = null
+        var pictures: String? = null
+
+        runBlocking {
+            launch {
+                try {
+                    songs = SongApi.retrofitService.getSongs()
+                    pictures = "Picture api not available"
+                } catch (e: Exception) {
+                    songs = e.message
+                    pictures = e.message
+                }
+
+            }
+        }
+
+        val intent = Intent(context, MainActivity::class.java).apply {
+            putExtra("value", songs)
+        }
         context.startActivity(intent)
     }
 }
