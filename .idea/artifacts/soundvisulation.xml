@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="apk" name="soundvisulation">
+    <output-path>$PROJECT_DIR$/build/classes/artifacts/soundvisulation</output-path>
+    <properties id="android-properties">
+      <options>
+        <option name="keyStoreUrl" value="file://" />
+      </options>
+    </properties>
+    <root id="archive" name="soundvisulation.apk">
+      <element id="android-final-package" facet="SoundVisualApk.app/android/Android" />
+    </root>
+  </artifact>
+</component>

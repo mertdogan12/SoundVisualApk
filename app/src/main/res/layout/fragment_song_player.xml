@@ -10,6 +10,7 @@
         android:id="@+id/song_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/song" />
+        android:text="@string/song"
+        android:layout_marginStart="10dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
