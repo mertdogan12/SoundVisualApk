@@ -9,16 +9,15 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import de.mert.soundvisualapk.databinding.ActivityConnectBinding
-import de.mert.soundvisualapk.network.SongApi
 import de.mert.soundvisualapk.viewmodels.SongViewModel
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
-
-private var baseUrl: String = SongApi.BASE_URL
 
 class ConnectActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityConnectBinding
+
+    companion object {
+        var baseUrl: String = "http://localhost:3000"
+    }
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +37,7 @@ class ConnectActivity : AppCompatActivity() {
 
     private fun handleKeyEvent(view: View, keyCode: Int): Boolean {
         if (keyCode == KeyEvent.KEYCODE_ENTER) {
-            connect(view)
+            closeKeyboard(view)
             return true
         }
 
@@ -52,15 +51,10 @@ class ConnectActivity : AppCompatActivity() {
 
     private fun connect(view: View) {
         val intent = Intent(view.context, MainActivity::class.java)
-        baseUrl = binding.ipAddressInput.text.toString()
+        val text = binding.ipAddressInput.text.toString()
 
-        if (baseUrl.isNotBlank())
-            baseUrl = (if (binding.httpSwitch.isChecked) "http://" else "https://") + baseUrl
-
-        SongApi.retrofit = Retrofit.Builder()
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .baseUrl(baseUrl)
-            .build()
+        if (text.isNotBlank())
+            baseUrl = (if (binding.httpSwitch.isChecked) "http://" else "https://") + text + "/getSongs"
 
         view.context.startActivity(intent)
     }
