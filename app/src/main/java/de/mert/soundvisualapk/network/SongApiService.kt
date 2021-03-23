@@ -7,7 +7,7 @@ import retrofit2.http.GET
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
-    .baseUrl(ConnectActivity.BASE_URL)
+    .baseUrl(ConnectActivity.baseUrl)
     .build()
 
 interface SongApiService {

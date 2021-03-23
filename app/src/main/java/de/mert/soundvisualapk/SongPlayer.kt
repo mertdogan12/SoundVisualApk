@@ -1,11 +1,16 @@
 package de.mert.soundvisualapk
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import de.mert.soundvisualapk.databinding.FragmentSongPlayerBinding
+import de.mert.soundvisualapk.viewmodels.SongViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,15 +37,18 @@ class SongPlayer : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding =FragmentSongPlayerBinding.inflate(inflater, container, false)
-
-        binding.songText.text = MainActivity.value
-
         val view = binding.root
+        val api: SongViewModel by viewModels()
+
+        binding.songText.text = "Connecting to " + ConnectActivity.baseUrl
+        api.getSongs(view).observe(viewLifecycleOwner, Observer<String> { song -> binding.songText.text = song })
+
         return view
     }
 

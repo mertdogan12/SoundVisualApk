@@ -9,6 +9,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import de.mert.soundvisualapk.databinding.ActivityConnectBinding
 import de.mert.soundvisualapk.network.SongApi
+import de.mert.soundvisualapk.viewmodels.SongViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.lang.Exception
@@ -18,7 +19,7 @@ class ConnectActivity : AppCompatActivity() {
     private lateinit var binding: ActivityConnectBinding
 
     companion object {
-        var BASE_URL = "http://localhost:3000"
+        var baseUrl = "http://localhost:3000"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +32,9 @@ class ConnectActivity : AppCompatActivity() {
         binding.ipAddressInput.setOnKeyListener { v, keyCode, _ -> handleKeyEvent(v, keyCode) }
 
         binding.connect.setOnClickListener { connect(it) }
+
+        if (!intent.getStringExtra(SongViewModel.ERROR_MESSAGE).isNullOrEmpty())
+            binding.errorMessage.text = intent.getStringExtra(SongViewModel.ERROR_MESSAGE)
     }
 
     private fun handleKeyEvent(view: View, keyCode: Int): Boolean {
@@ -48,26 +52,12 @@ class ConnectActivity : AppCompatActivity() {
     }
 
     private fun connect(view: View) {
-        val context = view.context
-        var songs: String? = null
-        var pictures: String? = null
+        val intent = Intent(view.context, MainActivity::class.java)
+        val text: String = binding.ipAddressInput.text.toString().replace(" ", "")
 
-        runBlocking {
-            launch {
-                try {
-                    songs = SongApi.retrofitService.getSongs()
-                    pictures = "Picture api not available"
-                } catch (e: Exception) {
-                    songs = e.message
-                    pictures = e.message
-                }
+        if (text.isNotEmpty())
+            baseUrl = (if (binding.httpSwitch.isChecked) "http://" else "https://") + text
 
-            }
-        }
-
-        val intent = Intent(context, MainActivity::class.java).apply {
-            putExtra("value", songs)
-        }
-        context.startActivity(intent)
+        view.context.startActivity(intent)
     }
 }
