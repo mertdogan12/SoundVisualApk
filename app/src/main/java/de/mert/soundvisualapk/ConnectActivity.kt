@@ -1,5 +1,6 @@
 package de.mert.soundvisualapk
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -10,18 +11,16 @@ import android.view.inputmethod.InputMethodManager
 import de.mert.soundvisualapk.databinding.ActivityConnectBinding
 import de.mert.soundvisualapk.network.SongApi
 import de.mert.soundvisualapk.viewmodels.SongViewModel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.lang.Exception
+import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
+
+private var baseUrl: String = SongApi.BASE_URL
 
 class ConnectActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityConnectBinding
 
-    companion object {
-        var baseUrl = "http://localhost:3000"
-    }
-
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityConnectBinding.inflate(layoutInflater)
@@ -34,12 +33,12 @@ class ConnectActivity : AppCompatActivity() {
         binding.connect.setOnClickListener { connect(it) }
 
         if (!intent.getStringExtra(SongViewModel.ERROR_MESSAGE).isNullOrEmpty())
-            binding.errorMessage.text = intent.getStringExtra(SongViewModel.ERROR_MESSAGE)
+            binding.errorMessage.text = baseUrl + " --> " + intent.getStringExtra(SongViewModel.ERROR_MESSAGE)
     }
 
     private fun handleKeyEvent(view: View, keyCode: Int): Boolean {
         if (keyCode == KeyEvent.KEYCODE_ENTER) {
-            closeKeyboard(view)
+            connect(view)
             return true
         }
 
@@ -53,10 +52,15 @@ class ConnectActivity : AppCompatActivity() {
 
     private fun connect(view: View) {
         val intent = Intent(view.context, MainActivity::class.java)
-        val text: String = binding.ipAddressInput.text.toString().replace(" ", "")
+        baseUrl = binding.ipAddressInput.text.toString()
 
-        if (text.isNotEmpty())
-            baseUrl = (if (binding.httpSwitch.isChecked) "http://" else "https://") + text
+        if (baseUrl.isNotBlank())
+            baseUrl = (if (binding.httpSwitch.isChecked) "http://" else "https://") + baseUrl
+
+        SongApi.retrofit = Retrofit.Builder()
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .baseUrl(baseUrl)
+            .build()
 
         view.context.startActivity(intent)
     }

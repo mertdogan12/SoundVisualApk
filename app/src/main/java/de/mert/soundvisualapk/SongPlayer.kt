@@ -6,9 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import de.mert.soundvisualapk.databinding.FragmentSongPlayerBinding
 import de.mert.soundvisualapk.viewmodels.SongViewModel
 
@@ -46,8 +44,8 @@ class SongPlayer : Fragment() {
         val view = binding.root
         val api: SongViewModel by viewModels()
 
-        binding.songText.text = "Connecting to " + ConnectActivity.baseUrl
-        api.getSongs(view).observe(viewLifecycleOwner, Observer<String> { song -> binding.songText.text = song })
+        binding.songText.text = "Connecting ..."
+        api.getSongs(view).observe(viewLifecycleOwner, { song -> binding.songText.text = song })
 
         return view
     }

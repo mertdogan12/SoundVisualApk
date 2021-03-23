@@ -29,8 +29,9 @@ class SongViewModel : ViewModel() {
                 songs.value = SongApi.retrofitService.getSongs()
             } catch (e: Exception) {
                 val intent = Intent(view.context, ConnectActivity::class.java).apply {
-                    putExtra(ERROR_MESSAGE, "Connection Failed: " + ConnectActivity.baseUrl)
+                    putExtra(ERROR_MESSAGE, "Connection Failed")
                 }
+
                 view.context.startActivity(intent)
             }
         }

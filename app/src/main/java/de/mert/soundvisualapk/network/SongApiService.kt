@@ -5,17 +5,19 @@ import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 
-private val retrofit = Retrofit.Builder()
-    .addConverterFactory(ScalarsConverterFactory.create())
-    .baseUrl(ConnectActivity.baseUrl)
-    .build()
-
 interface SongApiService {
     @GET("getSongs")
     suspend fun getSongs(): String
 }
 
 object SongApi {
+    const val BASE_URL = "http://localhost:3000"
+
+    var retrofit: Retrofit = Retrofit.Builder()
+        .addConverterFactory(ScalarsConverterFactory.create())
+        .baseUrl(BASE_URL)
+        .build()
+
     val retrofitService : SongApiService by lazy {
         retrofit.create(SongApiService::class.java)
     }
