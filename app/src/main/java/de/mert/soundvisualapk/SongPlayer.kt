@@ -40,7 +40,7 @@ class SongPlayer : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding =FragmentSongPlayerBinding.inflate(inflater, container, false)
+        _binding = FragmentSongPlayerBinding.inflate(inflater, container, false)
         val view = binding.root
         val api: SongViewModel by viewModels()
 
