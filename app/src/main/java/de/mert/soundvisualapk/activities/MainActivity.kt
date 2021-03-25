@@ -1,4 +1,4 @@
-package de.mert.soundvisualapk
+package de.mert.soundvisualapk.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

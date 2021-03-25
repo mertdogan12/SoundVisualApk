@@ -12,8 +12,8 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.SoundVisualApk">
-        <activity android:name=".MainActivity" />
-        <activity android:name=".ConnectActivity">
+        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.ConnectActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

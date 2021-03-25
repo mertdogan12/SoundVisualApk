@@ -1,16 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SongPlayer" >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/song_text"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/songs"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/song"
-        android:layout_marginStart="10dp"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="50dp"
+        android:layout_marginStart="10dp"
+        tools:listitem="@layout/song_item"/>
+
+    <TextView
+        android:id="@+id/connecting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/connecting"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="30sp"
+        android:textColor="@color/green"
+        android:visibility="invisible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,21 +6,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.mert.soundvisualapk.ConnectActivity
+import de.mert.soundvisualapk.activities.ConnectActivity
 import de.mert.soundvisualapk.network.SongApi
 import kotlinx.coroutines.launch
 import java.lang.Exception
-import java.net.URL
 
 class SongViewModel : ViewModel() {
-    private val songs: MutableLiveData<String> = MutableLiveData()
+    private val songs: MutableLiveData<List<String>> = MutableLiveData()
 
     companion object {
         const val ERROR_MESSAGE = "ErrorMessage"
     }
 
-    public fun getSongs(view: View): LiveData<String> {
-        loadSongs(view)
+    fun getSongs(view: View): LiveData<List<String>> {
         return songs
     }
 

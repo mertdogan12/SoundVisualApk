@@ -6,12 +6,12 @@
     app:startDestination="@id/songPlayer">
     <fragment
         android:id="@+id/songPlayer"
-        android:name="de.mert.soundvisualapk.SongPlayer"
+        android:name="de.mert.soundvisualapk.fragments.SongPlayer"
         android:label="fragment_song_player"
         tools:layout="@layout/fragment_song_player" />
     <fragment
         android:id="@+id/pictureFragment"
-        android:name="de.mert.soundvisualapk.PictureFragment"
+        android:name="de.mert.soundvisualapk.fragments.PictureFragment"
         android:label="fragment_picture"
         tools:layout="@layout/fragment_picture" />
 </navigation>

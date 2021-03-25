@@ -1,4 +1,4 @@
-package de.mert.soundvisualapk
+package de.mert.soundvisualapk.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -16,7 +16,7 @@ class ConnectActivity : AppCompatActivity() {
     private lateinit var binding: ActivityConnectBinding
 
     companion object {
-        var baseUrl: String = "http://localhost:3000"
+        var baseUrl: String = "http://192.168.178.57:3000/getSongs"
     }
 
     @SuppressLint("SetTextI18n")
@@ -51,7 +51,7 @@ class ConnectActivity : AppCompatActivity() {
 
     private fun connect(view: View) {
         val intent = Intent(view.context, MainActivity::class.java)
-        val text = binding.ipAddressInput.text.toString()
+        val text = binding.ipAddressInput.text.toString().replace(" ", "")
 
         if (text.isNotBlank())
             baseUrl = (if (binding.httpSwitch.isChecked) "http://" else "https://") + text + "/getSongs"

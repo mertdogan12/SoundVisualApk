@@ -1,4 +1,4 @@
-package de.mert.soundvisualapk
+package de.mert.soundvisualapk.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import de.mert.soundvisualapk.activities.recycleviewadapters.SongsRecycleAdapter
 import de.mert.soundvisualapk.databinding.FragmentSongPlayerBinding
 import de.mert.soundvisualapk.viewmodels.SongViewModel
 
@@ -42,10 +43,23 @@ class SongPlayer : Fragment() {
     ): View {
         _binding = FragmentSongPlayerBinding.inflate(inflater, container, false)
         val view = binding.root
-        val api: SongViewModel by viewModels()
+      //  val api: SongViewModel by viewModels()
 
-        binding.songText.text = "Connecting ..."
-        api.getSongs(view).observe(viewLifecycleOwner, { song -> binding.songText.text = song })
+        binding.songs.adapter = SongsRecycleAdapter(arrayListOf<String>("test", "test", "test"))
+
+       // binding.connecting.visibility = View.VISIBLE
+       // binding.songs.visibility = View.INVISIBLE
+
+
+
+       /* api.loadSongs(view)
+        api.getSongs(view).observe(viewLifecycleOwner, { song ->
+            run {
+                binding.songs.adapter = SongsRecycleAdapter(arrayOf("test", "test", "test"))
+                binding.connecting.visibility = View.INVISIBLE
+                binding.songs.visibility = View.VISIBLE
+            }
+        }) */
 
         return view
     }
