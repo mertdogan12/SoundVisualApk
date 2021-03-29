@@ -16,7 +16,7 @@ class ConnectActivity : AppCompatActivity() {
     private lateinit var binding: ActivityConnectBinding
 
     companion object {
-        var baseUrl: String = "http://192.168.178.57:3000/getSongs"
+        var baseUrl: String = "http://192.168.178.57:3000"
     }
 
     @SuppressLint("SetTextI18n")
@@ -54,7 +54,7 @@ class ConnectActivity : AppCompatActivity() {
         val text = binding.ipAddressInput.text.toString().replace(" ", "")
 
         if (text.isNotBlank())
-            baseUrl = (if (binding.httpSwitch.isChecked) "http://" else "https://") + text + "/getSongs"
+            baseUrl = (if (binding.httpSwitch.isChecked) "http://" else "https://") + text
 
         view.context.startActivity(intent)
     }

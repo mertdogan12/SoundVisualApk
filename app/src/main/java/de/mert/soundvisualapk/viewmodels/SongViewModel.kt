@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.mert.soundvisualapk.activities.ConnectActivity
+import de.mert.soundvisualapk.network.PlaySong
 import de.mert.soundvisualapk.network.SongApi
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -25,7 +26,7 @@ class SongViewModel : ViewModel() {
     fun loadSongs(view: View) {
         viewModelScope.launch {
             try {
-                songs.value = SongApi.retrofitService.getSongs(ConnectActivity.baseUrl)
+                songs.value = SongApi.retrofitService.getSongs(ConnectActivity.baseUrl + "/getSongs")
             } catch (e: Exception) {
                 val intent = Intent(view.context, ConnectActivity::class.java).apply {
                     putExtra(ERROR_MESSAGE, "Connection Failed")
