@@ -8,9 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import de.mert.soundvisualapk.activities.ConnectActivity
 import de.mert.soundvisualapk.activities.recycleviewadapters.SongsRecycleAdapter
 import de.mert.soundvisualapk.databinding.FragmentSongPlayerBinding
+import de.mert.soundvisualapk.network.SongApi
 import de.mert.soundvisualapk.viewmodels.SongViewModel
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,6 +47,11 @@ class SongPlayer : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSongPlayerBinding.inflate(inflater, container, false)
+
+        binding.playButton.setOnClickListener {
+            stopSong()
+        }
+
         return binding.root
     }
 
@@ -63,6 +72,12 @@ class SongPlayer : Fragment() {
                  binding.songs.visibility = View.VISIBLE
              }
          })
+    }
+
+    private fun stopSong() {
+        MainScope().launch {
+            SongApi.retrofitService.stopSong(ConnectActivity.baseUrl + "/stopSong")
+        }
     }
 
     companion object {

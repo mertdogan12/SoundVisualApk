@@ -38,8 +38,8 @@ class SongsRecycleAdapter(private val dataSet: List<String>) : RecyclerView.Adap
             MainScope().launch {
                 try {
                     val body = PlaySong(
-                        "mk.mp3",
-                        "https://i.pinimg.com/originals/5a/7f/8d/5a7f8d2ce48da3b3e7a375c2d58e3255.gif"
+                        dataSet[position],
+                        ""
                     )
 
                     SongApi.retrofitService.playSong(ConnectActivity.baseUrl + "/playSong", body)

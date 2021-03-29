@@ -26,6 +26,9 @@ interface SongApiService {
 
     @POST
     suspend fun playSong(@Url url: String, @Body playSong: PlaySong)
+
+    @GET
+    suspend fun stopSong(@Url url: String)
 }
 
 object SongApi {
