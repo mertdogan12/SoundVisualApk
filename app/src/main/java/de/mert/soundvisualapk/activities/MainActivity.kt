@@ -2,14 +2,12 @@ package de.mert.soundvisualapk.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import de.mert.soundvisualapk.databinding.ActivityMainBinding
-import de.mert.soundvisualapk.viewmodels.SongViewModel
 
 class MainActivity : AppCompatActivity() {
 

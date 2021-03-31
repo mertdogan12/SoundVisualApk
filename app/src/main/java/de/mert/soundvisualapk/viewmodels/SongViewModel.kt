@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.mert.soundvisualapk.activities.ConnectActivity
-import de.mert.soundvisualapk.network.PlaySong
 import de.mert.soundvisualapk.network.SongApi
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -19,7 +18,7 @@ class SongViewModel : ViewModel() {
         const val ERROR_MESSAGE = "ErrorMessage"
     }
 
-    fun getSongs(view: View): LiveData<List<String>> {
+    fun getSongs(): LiveData<List<String>> {
         return songs
     }
 
@@ -37,4 +36,3 @@ class SongViewModel : ViewModel() {
         }
     }
 }
-

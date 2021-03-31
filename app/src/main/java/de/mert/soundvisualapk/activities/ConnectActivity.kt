@@ -9,7 +9,6 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import de.mert.soundvisualapk.databinding.ActivityConnectBinding
-import de.mert.soundvisualapk.viewmodels.SongViewModel
 
 class ConnectActivity : AppCompatActivity() {
 

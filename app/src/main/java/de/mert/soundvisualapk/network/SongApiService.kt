@@ -29,6 +29,9 @@ interface SongApiService {
 
     @GET
     suspend fun stopSong(@Url url: String)
+
+    @GET
+    suspend fun getSong(@Url url: String): GetSong
 }
 
 object SongApi {

@@ -4,16 +4,13 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListAdapter
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import de.mert.soundvisualapk.R
 import de.mert.soundvisualapk.activities.ConnectActivity
 import de.mert.soundvisualapk.network.PlaySong
 import de.mert.soundvisualapk.network.SongApi
-import de.mert.soundvisualapk.viewmodels.SongViewModel
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.lang.Exception
 

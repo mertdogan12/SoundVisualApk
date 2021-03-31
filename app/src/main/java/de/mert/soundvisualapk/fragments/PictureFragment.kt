@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import de.mert.soundvisualapk.databinding.FragmentPictureBinding
-import de.mert.soundvisualapk.viewmodels.SongViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,7 +44,7 @@ class PictureFragment : Fragment() {
         val api: SongViewModel by viewModels()
 
         binding.pictures.text = "Songs: \n"
-        api.getSongs(binding.root).observe(viewLifecycleOwner, {songs -> binding.pictures.text = binding.pictures.text.toString()+ songs.toString()})
+        api.getSongs().observe(viewLifecycleOwner, {songs -> binding.pictures.text = binding.pictures.text.toString()+ songs.toString()})
 
         return binding.root
     }

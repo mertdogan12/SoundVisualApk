@@ -1,6 +1,7 @@
 package de.mert.soundvisualapk.fragments
 
 import android.annotation.SuppressLint
+import io.reactivex.Observable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,8 +14,12 @@ import de.mert.soundvisualapk.activities.recycleviewadapters.SongsRecycleAdapter
 import de.mert.soundvisualapk.databinding.FragmentSongPlayerBinding
 import de.mert.soundvisualapk.network.SongApi
 import de.mert.soundvisualapk.viewmodels.SongViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Consumer
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,6 +27,7 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private var _binding: FragmentSongPlayerBinding? = null
 private val binding get() = _binding!!
+private var disposable: Disposable? = null
 
 /**
  * A simple [Fragment] subclass.
@@ -48,6 +54,7 @@ class SongPlayer : Fragment() {
     ): View {
         _binding = FragmentSongPlayerBinding.inflate(inflater, container, false)
 
+        //Listener
         binding.playButton.setOnClickListener {
             stopSong()
         }
@@ -64,14 +71,14 @@ class SongPlayer : Fragment() {
         binding.connecting.visibility = View.VISIBLE
         binding.songs.visibility = View.INVISIBLE
 
-         api.loadSongs(view)
-         api.getSongs(view).observe(viewLifecycleOwner, { song ->
-             run {
-                 binding.songs.adapter = SongsRecycleAdapter(song)
-                 binding.connecting.visibility = View.INVISIBLE
-                 binding.songs.visibility = View.VISIBLE
-             }
-         })
+        api.loadSongs(view)
+        api.getSongs().observe(viewLifecycleOwner, { song ->
+            run {
+                binding.songs.adapter = SongsRecycleAdapter(song)
+                binding.connecting.visibility = View.INVISIBLE
+                binding.songs.visibility = View.VISIBLE
+            }
+        })
     }
 
     private fun stopSong() {
