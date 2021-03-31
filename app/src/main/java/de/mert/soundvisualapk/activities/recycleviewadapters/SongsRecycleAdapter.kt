@@ -10,6 +10,7 @@ import de.mert.soundvisualapk.R
 import de.mert.soundvisualapk.activities.ConnectActivity
 import de.mert.soundvisualapk.network.PlaySong
 import de.mert.soundvisualapk.network.SongApi
+import de.mert.soundvisualapk.viewmodels.SongViewModel
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.lang.Exception
