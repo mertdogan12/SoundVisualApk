@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import de.mert.soundvisualapk.R
 import de.mert.soundvisualapk.activities.ConnectActivity
+import de.mert.soundvisualapk.network.GetSongs
 import de.mert.soundvisualapk.network.PlaySong
 import de.mert.soundvisualapk.network.SongApi
 import de.mert.soundvisualapk.viewmodels.SongViewModel
@@ -15,7 +16,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class SongsRecycleAdapter(private val dataSet: List<String>) : RecyclerView.Adapter<SongsRecycleAdapter.ViewHolder>() {
+class SongsRecycleAdapter(private val dataSet: List<GetSongs>) : RecyclerView.Adapter<SongsRecycleAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.textView)
@@ -30,13 +31,15 @@ class SongsRecycleAdapter(private val dataSet: List<String>) : RecyclerView.Adap
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val view: View = holder.itemView
-        holder.textView.text = dataSet[position]
+        holder.textView.text = dataSet[position].name
+
+        if (dataSet[position].type.equals("dir")) holder.textView.text = holder.textView.text.toString() + "  (dir)"
 
         holder.textView.setOnClickListener{
             MainScope().launch {
                 try {
                     val body = PlaySong(
-                        dataSet[position],
+                        dataSet[position].name,
                         ""
                     )
 

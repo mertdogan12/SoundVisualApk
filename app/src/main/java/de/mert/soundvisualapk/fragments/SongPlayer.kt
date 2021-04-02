@@ -1,8 +1,8 @@
 package de.mert.soundvisualapk.fragments
 
 import android.annotation.SuppressLint
-import io.reactivex.Observable
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,12 +14,8 @@ import de.mert.soundvisualapk.activities.recycleviewadapters.SongsRecycleAdapter
 import de.mert.soundvisualapk.databinding.FragmentSongPlayerBinding
 import de.mert.soundvisualapk.network.SongApi
 import de.mert.soundvisualapk.viewmodels.SongViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,7 +23,7 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private var _binding: FragmentSongPlayerBinding? = null
 private val binding get() = _binding!!
-private var disposable: Disposable? = null
+private val handler: Handler = Handler()
 
 /**
  * A simple [Fragment] subclass.
@@ -54,10 +50,11 @@ class SongPlayer : Fragment() {
     ): View {
         _binding = FragmentSongPlayerBinding.inflate(inflater, container, false)
 
-        //Listener
         binding.playButton.setOnClickListener {
             stopSong()
         }
+
+        update.run()
 
         return binding.root
     }
@@ -81,10 +78,34 @@ class SongPlayer : Fragment() {
         })
     }
 
+    override fun onStop() {
+        super.onStop()
+        handler.removeCallbacks(update)
+    }
+
     private fun stopSong() {
         MainScope().launch {
             SongApi.retrofitService.stopSong(ConnectActivity.baseUrl + "/stopSong")
         }
+    }
+
+    private val update: Runnable = Runnable {
+        kotlin.run {
+            handler.postDelayed(getUpdate(), 2000)
+
+            if (errorMessage.isNotBlank()) {
+                binding.currentSong.text = errorMessage
+            }
+
+            val api: SongViewModel by viewModels()
+            api.getSong().observe(viewLifecycleOwner, { song ->
+                binding.currentSong.text = song.currentSong
+            })
+        }
+    }
+
+    private fun getUpdate(): Runnable {
+        return update
     }
 
     companion object {
@@ -105,5 +126,7 @@ class SongPlayer : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+
+        var errorMessage = ""
     }
 }

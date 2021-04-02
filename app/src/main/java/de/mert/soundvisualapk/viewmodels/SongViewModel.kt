@@ -7,19 +7,28 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.mert.soundvisualapk.activities.ConnectActivity
+import de.mert.soundvisualapk.fragments.SongPlayer
+import de.mert.soundvisualapk.network.GetSong
+import de.mert.soundvisualapk.network.GetSongs
 import de.mert.soundvisualapk.network.SongApi
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class SongViewModel : ViewModel() {
-    private val songs: MutableLiveData<List<String>> = MutableLiveData()
+    private val songs: MutableLiveData<List<GetSongs>> = MutableLiveData()
+    private val song: MutableLiveData<GetSong> = MutableLiveData()
 
     companion object {
         const val ERROR_MESSAGE = "ErrorMessage"
     }
 
-    fun getSongs(): LiveData<List<String>> {
+    fun getSongs(): LiveData<List<GetSongs>> {
         return songs
+    }
+
+    fun getSong(): LiveData<GetSong> {
+        loadSong()
+        return song
     }
 
     fun loadSongs(view: View) {
@@ -32,6 +41,17 @@ class SongViewModel : ViewModel() {
                 }
 
                 view.context.startActivity(intent)
+            }
+        }
+    }
+
+    private fun loadSong() {
+        viewModelScope.launch {
+            try {
+                song.value = SongApi.retrofitService.getSong(ConnectActivity.baseUrl + "/getSong")
+                SongPlayer.errorMessage = ""
+            } catch (e: Exception) {
+                SongPlayer.errorMessage = "No Connection"
             }
         }
     }

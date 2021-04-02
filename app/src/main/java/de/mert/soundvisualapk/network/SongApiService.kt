@@ -22,7 +22,7 @@ private var retrofit: Retrofit = Retrofit.Builder()
 
 interface SongApiService {
     @GET
-    suspend fun getSongs(@Url url: String): List<String>
+    suspend fun getSongs(@Url url: String): List<GetSongs>
 
     @POST
     suspend fun playSong(@Url url: String, @Body playSong: PlaySong)
