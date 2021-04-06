@@ -60,8 +60,6 @@ class SongPlayer : Fragment() {
             stopSong()
         }
 
-        update.run()
-
         return binding.root
     }
 
@@ -82,6 +80,11 @@ class SongPlayer : Fragment() {
                 connecting.visibility = View.INVISIBLE
             }
         })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        update.run()
     }
 
     override fun onStop() {
