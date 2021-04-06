@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import de.mert.soundvisualapk.R
 import de.mert.soundvisualapk.activities.ConnectActivity
+import de.mert.soundvisualapk.fragments.SongPlayer
 import de.mert.soundvisualapk.network.GetSongs
 import de.mert.soundvisualapk.network.PlaySong
 import de.mert.soundvisualapk.network.SongApi
@@ -16,7 +17,8 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class SongsRecycleAdapter(private val dataSet: List<GetSongs>) : RecyclerView.Adapter<SongsRecycleAdapter.ViewHolder>() {
+class SongsRecycleAdapter(private val dataSet: List<GetSongs>) :
+    RecyclerView.Adapter<SongsRecycleAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.textView)
@@ -33,24 +35,32 @@ class SongsRecycleAdapter(private val dataSet: List<GetSongs>) : RecyclerView.Ad
         val view: View = holder.itemView
         holder.textView.text = dataSet[position].name
 
-        if (dataSet[position].type.equals("dir")) holder.textView.text = holder.textView.text.toString() + "  (dir)"
+        if (dataSet[position].type.equals("dir")) {
+            holder.textView.text = holder.textView.text.toString() + "  (dir)"
+            holder.textView.setOnClickListener {
+                SongPlayer.updateSongs(dataSet[position].path)
+            }
+        } else
+            holder.textView.setOnClickListener { playSong(dataSet[position].path, view) }
 
-        holder.textView.setOnClickListener{
-            MainScope().launch {
-                try {
-                    val body = PlaySong(
-                        dataSet[position].name,
-                        ""
-                    )
+    }
 
-                    SongApi.retrofitService.playSong(ConnectActivity.baseUrl + "/playSong", body)
-                } catch (e: Exception) {
-                    val intent = Intent(view.context, ConnectActivity::class.java).apply {
-                        putExtra(SongViewModel.ERROR_MESSAGE, "Connection Failed")
-                    }
+    private fun playSong(name: String, view: View) {
+        MainScope().launch {
+            try {
+                val body = PlaySong(
+                    name,
+                    ""
+                )
 
-                    view.context.startActivity(intent)
+                SongApi.retrofitService.playSong(ConnectActivity.baseUrl + "/playSong", body)
+            } catch (e: Exception) {
+                val intent = Intent(
+                        view.context, ConnectActivity::class.java).apply {
+                    putExtra(SongViewModel.ERROR_MESSAGE, "Connection Failed")
                 }
+
+                view.context.startActivity(intent)
             }
         }
     }

@@ -8,14 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
-import de.mert.soundvisualapk.activities.ConnectActivity
 import de.mert.soundvisualapk.activities.recycleviewadapters.SongsRecycleAdapter
 import de.mert.soundvisualapk.databinding.FragmentSongPlayerBinding
-import de.mert.soundvisualapk.network.SongApi
+import de.mert.soundvisualapk.network.GetSongs
 import de.mert.soundvisualapk.viewmodels.SongViewModel
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,6 +22,10 @@ private const val ARG_PARAM2 = "param2"
 private var _binding: FragmentSongPlayerBinding? = null
 private val binding get() = _binding!!
 private val handler: Handler = Handler()
+private var _api: SongViewModel? = null
+private val api get() = _api!!
+private var _liveCycleOwner: LifecycleOwner? = null
+private val lifecycleOwner get() = _liveCycleOwner!!
 
 /**
  * A simple [Fragment] subclass.
@@ -48,7 +50,11 @@ class SongPlayer : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val a: SongViewModel by viewModels()
+
         _binding = FragmentSongPlayerBinding.inflate(inflater, container, false)
+        _api = a
+        _liveCycleOwner = viewLifecycleOwner
 
         binding.playButton.setOnClickListener {
             stopSong()
@@ -61,19 +67,19 @@ class SongPlayer : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val songs = binding.songs
-        val api: SongViewModel by viewModels()
+        val connecting = binding.connecting
 
         songs.layoutManager = LinearLayoutManager(requireContext())
 
-        binding.connecting.visibility = View.VISIBLE
-        binding.songs.visibility = View.INVISIBLE
+        connecting.visibility = View.VISIBLE
+        songs.visibility = View.INVISIBLE
 
-        api.loadSongs(view)
+        api.loadSongs(view, "")
         api.getSongs().observe(viewLifecycleOwner, { song ->
             run {
-                binding.songs.adapter = SongsRecycleAdapter(song)
-                binding.connecting.visibility = View.INVISIBLE
-                binding.songs.visibility = View.VISIBLE
+                songs.adapter = SongsRecycleAdapter(song)
+                songs.visibility = View.VISIBLE
+                connecting.visibility = View.INVISIBLE
             }
         })
     }
@@ -84,9 +90,7 @@ class SongPlayer : Fragment() {
     }
 
     private fun stopSong() {
-        MainScope().launch {
-            SongApi.retrofitService.stopSong(ConnectActivity.baseUrl + "/stopSong")
-        }
+        api.stopSong()
     }
 
     private val update: Runnable = Runnable {
@@ -97,7 +101,6 @@ class SongPlayer : Fragment() {
                 binding.currentSong.text = errorMessage
             }
 
-            val api: SongViewModel by viewModels()
             api.getSong().observe(viewLifecycleOwner, { song ->
                 binding.currentSong.text = song.currentSong
             })
@@ -128,5 +131,28 @@ class SongPlayer : Fragment() {
             }
 
         var errorMessage = ""
+
+        fun updateSongs(path: String) {
+            api.loadSongs(binding.root, path)
+            api.getSongs().observe(lifecycleOwner, { songs ->
+                var backPath = ""
+                val mutableSongs = songs.toMutableList()
+                val firstElementPath: MutableList<String> = songs[0].path.split("/").toMutableList()
+
+                firstElementPath.removeLast()
+                if (firstElementPath.isNotEmpty()) firstElementPath.removeLast()
+                backPath = firstElementPath.joinToString("/")
+
+                val back: GetSongs = GetSongs(
+                    "dir",
+                    "..",
+                    backPath
+                )
+
+                mutableSongs.add(0, back)
+
+                binding.songs.adapter = SongsRecycleAdapter(mutableSongs.toList())
+            })
+        }
     }
 }

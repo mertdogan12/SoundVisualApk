@@ -12,4 +12,6 @@
     <string name="http">Http</string>
     <string name="connecting">Connecting</string>
     <string name="play_button">Play Button</string>
+    <string name="search_button">Search Button</string>
+    <string name="in_process">In process</string>
 </resources>

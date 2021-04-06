@@ -31,16 +31,18 @@ class SongViewModel : ViewModel() {
         return song
     }
 
-    fun loadSongs(view: View) {
+    fun loadSongs(view: View, path: String) {
         viewModelScope.launch {
             try {
-                songs.value = SongApi.retrofitService.getSongs(ConnectActivity.baseUrl + "/getSongs")
+                songs.value = SongApi.retrofitService.getSongs(ConnectActivity.baseUrl + "/getSongs?path=" + path)
             } catch (e: Exception) {
-                val intent = Intent(view.context, ConnectActivity::class.java).apply {
-                    putExtra(ERROR_MESSAGE, "Connection Failed")
-                }
+              /*  val intent = Intent(view.context, ConnectActivity::class.java).apply {
+                    putExtra(ERROR_MESSAGE, e.message)
+                } */
 
-                view.context.startActivity(intent)
+                e.printStackTrace()
+
+            //    view.context.startActivity(intent)
             }
         }
     }
@@ -53,6 +55,12 @@ class SongViewModel : ViewModel() {
             } catch (e: Exception) {
                 SongPlayer.errorMessage = "No Connection"
             }
+        }
+    }
+
+    fun stopSong() {
+        viewModelScope.launch {
+            SongApi.retrofitService.stopSong(ConnectActivity.baseUrl + "/stopSong")
         }
     }
 }

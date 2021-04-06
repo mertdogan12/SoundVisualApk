@@ -27,10 +27,8 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.554"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.711" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,5 +54,18 @@
 
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/search"
+        android:layout_width="56dp"
+        android:layout_height="53dp"
+        android:src="@drawable/ic_baseline_search_24"
+        android:background="@drawable/round_corners"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/search_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
