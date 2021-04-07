@@ -16,7 +16,7 @@ class ConnectActivity : AppCompatActivity() {
     private lateinit var binding: ActivityConnectBinding
 
     companion object {
-        var baseUrl: String = "http://192.168.178.57:3000"
+        var baseUrl: String = "http://localhost:3000"
     }
 
     @SuppressLint("SetTextI18n")
@@ -25,16 +25,19 @@ class ConnectActivity : AppCompatActivity() {
         binding = ActivityConnectBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //Listener
         binding.backGround.setOnClickListener { closeKeyboard(it) }
-
         binding.ipAddressInput.setOnKeyListener { v, keyCode, _ -> handleKeyEvent(v, keyCode) }
-
         binding.connect.setOnClickListener { connect(it) }
 
+        // Show the error message if one is given
         if (!intent.getStringExtra(SongViewModel.ERROR_MESSAGE).isNullOrEmpty())
             binding.errorMessage.text = baseUrl + " --> " + intent.getStringExtra(SongViewModel.ERROR_MESSAGE)
     }
 
+    /**
+     * Just close the keyboard if enter
+     */
     private fun handleKeyEvent(view: View, keyCode: Int): Boolean {
         if (keyCode == KeyEvent.KEYCODE_ENTER) {
             closeKeyboard(view)
@@ -44,11 +47,17 @@ class ConnectActivity : AppCompatActivity() {
         return false
     }
 
+    /**
+     * The actual function with close the keyboard
+     */
     private fun closeKeyboard(view: View) {
         val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    /**
+     * Sets the ip and starts the MainActivity with then starts the connection
+     */
     private fun connect(view: View) {
         val intent = Intent(view.context, MainActivity::class.java)
         val text = binding.ipAddressInput.text.toString().replace(" ", "")

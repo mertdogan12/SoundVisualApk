@@ -14,4 +14,5 @@
     <string name="play_button">Play Button</string>
     <string name="search_button">Search Button</string>
     <string name="in_process">In process</string>
+    <string name="search">search</string>
 </resources>

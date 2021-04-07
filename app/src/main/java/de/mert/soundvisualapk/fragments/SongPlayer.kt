@@ -1,12 +1,17 @@
 package de.mert.soundvisualapk.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import androidx.core.view.isVisible
+import androidx.core.view.marginTop
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +19,7 @@ import de.mert.soundvisualapk.activities.recycleviewadapters.SongsRecycleAdapter
 import de.mert.soundvisualapk.databinding.FragmentSongPlayerBinding
 import de.mert.soundvisualapk.network.GetSongs
 import de.mert.soundvisualapk.viewmodels.SongViewModel
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -52,17 +58,96 @@ class SongPlayer : Fragment() {
     ): View {
         val a: SongViewModel by viewModels()
 
+        // initialises the vars
         _binding = FragmentSongPlayerBinding.inflate(inflater, container, false)
         _api = a
         _liveCycleOwner = viewLifecycleOwner
 
-        binding.playButton.setOnClickListener {
-            stopSong()
-        }
+        //Listener
+        binding.playButton.setOnClickListener { stopSong() }
+        binding.search.setOnClickListener { searchButton() }
+        binding.searchText.setOnKeyListener { _, keyCode, _ -> search(keyCode, binding.searchText.text.toString()) }
 
         return binding.root
     }
 
+    /**
+     * opens keyboard and shows searchbar if searchbar is invisible
+     * else closes the keyboard and hides the searchbar
+     */
+    private fun searchButton() {
+        if (binding.searchTextLayout.isVisible) {
+            search(KeyEvent.KEYCODE_ENTER, binding.searchText.text.toString()) // also executes the search fun if is closes the searchbar
+            closeKeyboard()
+        } else
+            openKeyboard()
+    }
+
+    /**
+     * the actual fun who closes the keyboard
+     */
+    private fun closeKeyboard() {
+        val songs = binding.songs
+        val margin = songs.layoutParams as ViewGroup.MarginLayoutParams
+
+        margin.topMargin = 0
+        songs.layoutParams = margin
+
+        binding.searchTextLayout.visibility = View.INVISIBLE
+
+        val inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
+    }
+
+    /**
+     * the actual fun who opens the keyboard
+     */
+    private fun openKeyboard() {
+        val songs = binding.songs
+        val search = binding.search
+        val margin = songs.layoutParams as ViewGroup.MarginLayoutParams
+
+        margin.topMargin = search.height + 2 * search.marginTop
+        songs.layoutParams = margin
+
+        binding.searchTextLayout.visibility = View.VISIBLE
+        binding.searchText.requestFocus()
+
+        val inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+    }
+
+    /**
+     * updates the SongsRecycleAdapter with the songs with contains the text from the search bar
+     */
+    private fun search(keyCode: Int, input: String): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_ENTER) {
+            closeKeyboard()
+            api.getSongs().observe(lifecycleOwner, { song ->
+                val songs = mutableListOf<GetSongs>()
+
+                song.forEach { e ->
+                    if (e.name.toLowerCase(Locale.ROOT).contains(input.toLowerCase(Locale.ROOT)))
+                        songs.add(e)
+                }
+
+                binding.songs.adapter = SongsRecycleAdapter(songs.toList())
+            })
+        }
+
+        return true
+    }
+
+    /**
+     * send a get request to stop the song
+     */
+    private fun stopSong() {
+        api.stopSong()
+    }
+
+    /**
+     * load the songs
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val songs = binding.songs
         val connecting = binding.connecting
@@ -82,20 +167,25 @@ class SongPlayer : Fragment() {
         })
     }
 
+    /**
+     * start the update runnable
+     */
     override fun onStart() {
         super.onStart()
         update.run()
     }
 
+    /**
+     * stops the update runnable
+     */
     override fun onStop() {
         super.onStop()
         handler.removeCallbacks(update)
     }
 
-    private fun stopSong() {
-        api.stopSong()
-    }
-
+    /**
+     * gets the current playing song and shows it
+     */
     private val update: Runnable = Runnable {
         kotlin.run {
             handler.postDelayed(getUpdate(), 2000)
@@ -135,10 +225,13 @@ class SongPlayer : Fragment() {
 
         var errorMessage = ""
 
+        /**
+         * update the songs with the songs in the given path
+         */
         fun updateSongs(path: String) {
             api.loadSongs(binding.root, path)
             api.getSongs().observe(lifecycleOwner, { songs ->
-                var backPath = ""
+                val backPath: String
                 val mutableSongs = songs.toMutableList()
                 val firstElementPath: MutableList<String> = songs[0].path.split("/").toMutableList()
 
@@ -146,7 +239,7 @@ class SongPlayer : Fragment() {
                 if (firstElementPath.isNotEmpty()) firstElementPath.removeLast()
                 backPath = firstElementPath.joinToString("/")
 
-                val back: GetSongs = GetSongs(
+                val back = GetSongs(
                     "dir",
                     "..",
                     backPath

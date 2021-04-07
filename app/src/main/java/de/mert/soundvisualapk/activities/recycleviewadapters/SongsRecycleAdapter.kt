@@ -31,6 +31,11 @@ class SongsRecycleAdapter(private val dataSet: List<GetSongs>) :
         return ViewHolder(view)
     }
 
+    /**
+     * Sets the name and the click listener of the items
+     * if its a dir the click listener will update the songs with the songs in the given path
+     * if its a song it will send a post request to the server to play the song
+     */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val view: View = holder.itemView
         holder.textView.text = dataSet[position].name
@@ -45,6 +50,9 @@ class SongsRecycleAdapter(private val dataSet: List<GetSongs>) :
 
     }
 
+    /**
+     * The actual function who sends the post request to play a song
+     */
     private fun playSong(name: String, view: View) {
         MainScope().launch {
             try {

@@ -31,22 +31,28 @@ class SongViewModel : ViewModel() {
         return song
     }
 
+    /**
+     * gets the songs in the given path
+     */
     fun loadSongs(view: View, path: String) {
         viewModelScope.launch {
             try {
                 songs.value = SongApi.retrofitService.getSongs(ConnectActivity.baseUrl + "/getSongs?path=" + path)
             } catch (e: Exception) {
-              /*  val intent = Intent(view.context, ConnectActivity::class.java).apply {
+                val intent = Intent(view.context, ConnectActivity::class.java).apply {
                     putExtra(ERROR_MESSAGE, e.message)
-                } */
+                }
 
                 e.printStackTrace()
 
-            //    view.context.startActivity(intent)
+                view.context.startActivity(intent)
             }
         }
     }
 
+    /**
+     * gets the current playing song
+     */
     private fun loadSong() {
         viewModelScope.launch {
             try {
@@ -58,6 +64,9 @@ class SongViewModel : ViewModel() {
         }
     }
 
+    /**
+     * stops the playing song
+     */
     fun stopSong() {
         viewModelScope.launch {
             SongApi.retrofitService.stopSong(ConnectActivity.baseUrl + "/stopSong")
