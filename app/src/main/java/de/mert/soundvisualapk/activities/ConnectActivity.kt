@@ -16,7 +16,7 @@ class ConnectActivity : AppCompatActivity() {
     private lateinit var binding: ActivityConnectBinding
 
     companion object {
-        var baseUrl: String = "http://localhost:3000"
+        var baseUrl: String = "http://192.168.178.29:3000"
     }
 
     @SuppressLint("SetTextI18n")

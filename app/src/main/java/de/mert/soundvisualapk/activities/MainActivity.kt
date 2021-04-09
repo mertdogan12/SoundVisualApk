@@ -6,6 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import de.mert.soundvisualapk.databinding.ActivityMainBinding
+import de.mert.soundvisualapk.fragments.SongPlayer
 
 class MainActivity : AppCompatActivity() {
 

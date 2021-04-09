@@ -67,9 +67,27 @@ class SongViewModel : ViewModel() {
     /**
      * stops the playing song
      */
-    fun stopSong() {
+    fun pauseSong() {
         viewModelScope.launch {
-            SongApi.retrofitService.stopSong(ConnectActivity.baseUrl + "/stopSong")
+            SongApi.retrofitService.pauseSong(ConnectActivity.baseUrl + "/pauseSong")
+        }
+    }
+
+    /**
+     * plays the next song
+     */
+    fun skipSong() {
+        viewModelScope.launch {
+            SongApi.retrofitService.pauseSong(ConnectActivity.baseUrl + "/skipSong")
+        }
+    }
+
+    /**
+     * play the song before
+     */
+    fun backSong() {
+        viewModelScope.launch {
+            SongApi.retrofitService.pauseSong(ConnectActivity.baseUrl + "/backSong")
         }
     }
 }

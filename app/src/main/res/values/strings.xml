@@ -15,4 +15,6 @@
     <string name="search_button">Search Button</string>
     <string name="in_process">In process</string>
     <string name="search">search</string>
+    <string name="skip_button">Skip Button</string>
+    <string name="back_button">Back Button</string>
 </resources>

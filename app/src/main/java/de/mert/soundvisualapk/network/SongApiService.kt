@@ -28,7 +28,13 @@ interface SongApiService {
     suspend fun playSong(@Url url: String, @Body playSong: PlaySong)
 
     @GET
-    suspend fun stopSong(@Url url: String)
+    suspend fun pauseSong(@Url url: String)
+
+    @GET
+    suspend fun skipSong(@Url url: String)
+
+    @GET
+    suspend fun backSong(@Url url: String)
 
     @GET
     suspend fun getSong(@Url url: String): GetSong

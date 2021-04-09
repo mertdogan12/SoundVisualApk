@@ -1,4 +1,4 @@
-package de.mert.soundvisualapk.activities.recycleviewadapters
+package de.mert.soundvisualapk.recycleviewadapters
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -64,7 +64,8 @@ class SongsRecycleAdapter(private val dataSet: List<GetSongs>) :
                 SongApi.retrofitService.playSong(ConnectActivity.baseUrl + "/playSong", body)
             } catch (e: Exception) {
                 val intent = Intent(
-                        view.context, ConnectActivity::class.java).apply {
+                    view.context, ConnectActivity::class.java
+                ).apply {
                     putExtra(SongViewModel.ERROR_MESSAGE, "Connection Failed")
                 }
 

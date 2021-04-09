@@ -14,11 +14,17 @@ import androidx.core.view.isVisible
 import androidx.core.view.marginTop
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
+import de.mert.soundvisualapk.R
 import androidx.recyclerview.widget.LinearLayoutManager
-import de.mert.soundvisualapk.activities.recycleviewadapters.SongsRecycleAdapter
+import de.mert.soundvisualapk.activities.ConnectActivity
+import de.mert.soundvisualapk.recycleviewadapters.SongsRecycleAdapter
 import de.mert.soundvisualapk.databinding.FragmentSongPlayerBinding
 import de.mert.soundvisualapk.network.GetSongs
+import de.mert.soundvisualapk.network.PlaySong
+import de.mert.soundvisualapk.network.SongApi
 import de.mert.soundvisualapk.viewmodels.SongViewModel
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -64,8 +70,10 @@ class SongPlayer : Fragment() {
         _liveCycleOwner = viewLifecycleOwner
 
         //Listener
-        binding.playButton.setOnClickListener { stopSong() }
+        binding.playButton.setOnClickListener { playButtonOnClick() }
         binding.search.setOnClickListener { searchButton() }
+        binding.skipButton.setOnClickListener { api.skipSong() }
+        binding.backButton.setOnClickListener { api.backSong() }
         binding.searchText.setOnKeyListener { _, keyCode, _ -> search(keyCode, binding.searchText.text.toString()) }
 
         return binding.root
@@ -77,7 +85,10 @@ class SongPlayer : Fragment() {
      */
     private fun searchButton() {
         if (binding.searchTextLayout.isVisible) {
-            search(KeyEvent.KEYCODE_ENTER, binding.searchText.text.toString()) // also executes the search fun if is closes the searchbar
+            search(
+                KeyEvent.KEYCODE_ENTER,
+                binding.searchText.text.toString()
+            ) // also executes the search fun if is closes the searchbar
             closeKeyboard()
         } else
             openKeyboard()
@@ -139,10 +150,28 @@ class SongPlayer : Fragment() {
     }
 
     /**
-     * send a get request to stop the song
+     * if currently a song is playing it pause it
+     * else if a song is on pause is start it again
+     * else is just do nothing
      */
-    private fun stopSong() {
-        api.stopSong()
+    private fun playButtonOnClick() {
+        if (playing == null) return
+
+        if (playing!!) {
+            api.pauseSong()
+            playing = false
+            binding.playButton.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+        } else {
+            val playSong = PlaySong(
+                "",
+                ""
+            )
+            MainScope().launch {
+                SongApi.retrofitService.playSong(ConnectActivity.baseUrl + "/playSong", playSong)
+            }
+            playing = true
+            binding.playButton.setImageResource(R.drawable.ic_baseline_pause_24)
+        }
     }
 
     /**
@@ -185,6 +214,7 @@ class SongPlayer : Fragment() {
 
     /**
      * gets the current playing song and shows it
+     * also get the status of the song and updates the playing var
      */
     private val update: Runnable = Runnable {
         kotlin.run {
@@ -195,7 +225,16 @@ class SongPlayer : Fragment() {
             }
 
             api.getSong().observe(viewLifecycleOwner, { song ->
-                binding.currentSong.text = song.currentSong
+                val currentSong = song.currentSong
+
+                if (binding.currentSong.text != currentSong) binding.scrollView.scrollX = 0
+                binding.currentSong.text = currentSong
+
+                if (currentSong.isNotBlank()) {
+                    playing = song.playing == true && song.pause == false
+                    binding.playButton.setImageResource(if (playing!!) R.drawable.ic_baseline_pause_24 else R.drawable.ic_baseline_play_arrow_24)
+                } else
+                    playing = null
             })
         }
     }
@@ -224,31 +263,13 @@ class SongPlayer : Fragment() {
             }
 
         var errorMessage = ""
+        var playing: Boolean? = null
 
         /**
          * update the songs with the songs in the given path
          */
         fun updateSongs(path: String) {
             api.loadSongs(binding.root, path)
-            api.getSongs().observe(lifecycleOwner, { songs ->
-                val backPath: String
-                val mutableSongs = songs.toMutableList()
-                val firstElementPath: MutableList<String> = songs[0].path.split("/").toMutableList()
-
-                firstElementPath.removeLast()
-                if (firstElementPath.isNotEmpty()) firstElementPath.removeLast()
-                backPath = firstElementPath.joinToString("/")
-
-                val back = GetSongs(
-                    "dir",
-                    "..",
-                    backPath
-                )
-
-                mutableSongs.add(0, back)
-
-                binding.songs.adapter = SongsRecycleAdapter(mutableSongs.toList())
-            })
         }
     }
 }
